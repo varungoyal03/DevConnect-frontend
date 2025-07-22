@@ -1,2 +1,2 @@
 export const BASE_URL =
-"http://localhost:3000/api/v1" 
+"https://devconnect-1-lpat.onrender.com/api/v1" 
