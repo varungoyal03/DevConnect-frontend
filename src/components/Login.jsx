@@ -24,9 +24,10 @@ const Login = () => {
         { withCredentials: true }
       );
       dispatch(addUser(res.data.data));
-      return navigate("/");
+      navigate("/");
     } catch (err) {
-      setError(err?.response?.data || "Something went wrong");
+      console.log(err)
+      setError(err?.response?.data.message || "Something went wrong");
     }
   };
 

@@ -1,10 +1,10 @@
 const Footer = () => {
   return (
-    <footer className="footer bg-base-200 text-neutral-content p-4 fixed bottom-0">
+    <footer className="footer bg-base-200 text-neutral-content fixed bottom-0 h-12 p-4">
       <aside className="grid-flow-col items-center">
         <svg
           width="36"
-          height="36"
+          height="18"
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
           fillRule="evenodd"
@@ -20,7 +20,7 @@ const Footer = () => {
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
-            height="24"
+            height="18"
             viewBox="0 0 24 24"
             className="fill-current"
           >
@@ -31,7 +31,7 @@ const Footer = () => {
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
-            height="24"
+            height="18"
             viewBox="0 0 24 24"
             className="fill-current"
           >
@@ -42,7 +42,7 @@ const Footer = () => {
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
-            height="24"
+            height="18"
             viewBox="0 0 24 24"
             className="fill-current"
           >
