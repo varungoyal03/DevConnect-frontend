@@ -10,7 +10,7 @@ const Requests = () => {
 
   const reviewRequest = async (status, _id) => {
     try {
-      const res = axios.post(
+      const res = await axios.post(
         BASE_URL + "/request/review/" + status + "/" + _id,
         {},
         { withCredentials: true }
@@ -24,6 +24,7 @@ const Requests = () => {
       const res = await axios.get(BASE_URL + "/user/requests/received", {
         withCredentials: true,
       });
+
 
       dispatch(addRequests(res.data.data));
     } catch (err) {}
@@ -78,13 +79,13 @@ return (
        <div className="join">
          <button
            className="btn btn-error join-item px-8 py-3"
-           onClick={() => reviewRequest("rejected", _id)}
+           onClick={() => reviewRequest("rejected", request._id)}
          >
            ✕ Reject
          </button>
          <button
            className="btn btn-success join-item px-8 py-3"
-           onClick={() => reviewRequest("accepted", _id)}
+           onClick={() => reviewRequest("accepted", request._id)}
          >
            ✓ Accept
          </button>

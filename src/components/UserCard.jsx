@@ -7,6 +7,8 @@ const UserCard = ({ user }) => {
   const { _id, firstName, lastName, photoUrl, age, gender, about } = user;
   const dispatch = useDispatch();
 
+
+  
   const handleSendRequest = async (status, userId) => {
     try {
       const res = await axios.post(
@@ -17,6 +19,13 @@ const UserCard = ({ user }) => {
       dispatch(removeUserFromFeed(userId));
     } catch (err) {}
   };
+
+
+
+
+
+
+ 
 
   return (
     <div className="card bg-base-300 w-96 shadow-xl">
