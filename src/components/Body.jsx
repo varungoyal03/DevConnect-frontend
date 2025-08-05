@@ -7,6 +7,8 @@ import { BASE_URL } from "../utils/constants";
 import { useEffect } from "react";
 import axios from "axios";
 import { addUser } from "../utils/userSlice";
+import { addOnlineFriend, removeOnlineFriend, setOnlineFriends } from "../utils/connectionSlice";
+import { closeOnlineStatusStream, initOnlineStatusStream } from "../utils/sse";
 
 const Body = () => {
 
@@ -30,9 +32,49 @@ const Body = () => {
     }
   };
 
+
+
+
+
+
+
+
+
   useEffect(() => {
     fetchUser();
   }, []);
+
+
+
+
+useEffect(() => {
+  const setupSSE = async () => {
+    if (!userData?._id) return;
+
+    initOnlineStatusStream(
+      (id) => dispatch(addOnlineFriend(id)),
+      (id) => dispatch(removeOnlineFriend(id)),
+      (list) => dispatch(setOnlineFriends(list))
+    );
+  };
+
+  setupSSE();
+
+  return () => {
+    closeOnlineStatusStream();
+  };
+}, [userData?._id]);
+
+
+
+const onlineFriends = useSelector((store) => store.connections.onlineFriends);
+useEffect(() => {
+  console.log("🟢 Online Friends:", onlineFriends);
+}, [onlineFriends]);
+
+
+
+
   return (
     <div>
       <NavBar />

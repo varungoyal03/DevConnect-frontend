@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import { disconnectSocket, getSocket } from "../utils/socket.js";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -9,6 +9,14 @@ const Chat = () => {
   const { targetUserId } = useParams();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [typingUser, setTypingUser] = useState(null);
+const typingTimeoutRef = useRef(null);
+
+const location = useLocation();
+
+const passedUser = location.state;
+const [targetUser, setTargetUser] = useState(passedUser || null);
+
 
   const user = useSelector((store) => store.user);
   const userId = user?._id;
@@ -73,10 +81,28 @@ console.log(message)
 
   socket.on("messageReceived", handleMessage);
 
+const handleTyping = ({ userId: typingUserId, firstName, lastName }) => {
+  if (typingUserId !== userId) {
+    setTypingUser({ firstName, lastName });
+  }
+};
+
+const handleStopTyping = ({ userId: typingUserId }) => {
+  if (typingUserId !== userId) {
+    setTypingUser(null);
+  }
+};
+
+socket.on("typing", handleTyping);
+socket.on("stopTyping", handleStopTyping);
+
+
+
+
     return () => {
       disconnectSocket();
     };
-  }, [userId]);
+  }, [userId,targetUserId]);
 
 useEffect(() => {
   if (messagesEndRef.current) {
@@ -91,12 +117,39 @@ useEffect(() => {
       targetUserId,
       text: newMessage,
     });
+     socket.emit("stopTyping", { targetUserId });
     setNewMessage("");
   };
 
+
+  const handleTypingEvent = () => {
+  const socket = getSocket();
+  socket.emit("typing", { targetUserId });
+
+  if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+
+  typingTimeoutRef.current = setTimeout(() => {
+    socket.emit("stopTyping", { targetUserId });
+  }, 2500); // stop typing after 1 second of inactivity
+};
+
+
   return (
     <div className="w-3/4 mx-auto border border-gray-300 m-5 h-[70vh] flex flex-col">
-      <h1 className="p-5 border-b border-gray-600">Chat</h1>
+
+
+     <div className="flex items-center gap-3 p-4 border-b border-gray-700 bg-gray-800">
+    <img
+      src={targetUser?.photoUrl || "/default-avatar.png"}
+      alt="avatar"
+      className="w-8 h-8 rounded-full object-cover"
+    />
+    <h2 className="text-sm font-medium text-white">
+      {targetUser?.firstName} {targetUser?.lastName}
+    </h2>
+  </div>
+
+
       <div className="flex-1 overflow-scroll p-5">
         {messages.map((msg, index) => {
           return (
@@ -117,13 +170,30 @@ useEffect(() => {
           );
         })}
 
+
+
+
             <div ref={messagesEndRef} />
       </div>
 
+{typingUser && (
+  <div className="w-full px-4 py-2 border-t border-base-300 bg-base-100 text-secondary flex items-center gap-2">
+    <span className="loading loading-dots loading-sm"></span>
+    <span className="italic text-sm font-medium">
+      {typingUser.firstName} {typingUser.lastName} is typing...
+    </span>
+  </div>
+)}
+
+
       <div className="p-5 border-t border-gray-600 flex items-center gap-2">
+
+
         <input
           value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
+          onChange={(e) => {setNewMessage(e.target.value);
+            handleTypingEvent();}
+          }
           className="flex-1 border border-gray-500 text-white rounded p-2"
         ></input>
         <button onClick={sendMessage} className="btn btn-secondary">

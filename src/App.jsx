@@ -9,8 +9,13 @@ import Connections from "./components/Connections";
 import Requests from "./components/Requests";
 import SignUp from "./components/SignUp";
 import Chat from "./components/Chat";
+import { BASE_URL } from "./utils/constants";
 
 function App() {
+
+  
+ 
+
   return (
     <>
     <Provider store={appStore}>

@@ -6,8 +6,11 @@ import { addConnections } from "../utils/connectionSlice";
 import { Link } from "react-router-dom";
 
 const Connections = () => {
-  const connections = useSelector((store) => store.connections);
+  const connections = useSelector((store) => store.connections.connections);
   const dispatch = useDispatch();
+  const onlineFriends = useSelector((store) => store.connections.onlineFriends);
+
+
   const fetchConnections = async () => {
     try {
       const res = await axios.get(BASE_URL + "/user/connections", {
@@ -35,6 +38,7 @@ const Connections = () => {
       {connections.map((connection) => {
         const { _id, firstName, lastName, photoUrl, age, gender, about } =
           connection;
+          const isOnline = onlineFriends.includes(_id);
 
         return (
           <div
@@ -49,22 +53,35 @@ const Connections = () => {
               />
             </div>
             <div className="text-left mx-4 ">
-              <h2 className="font-bold text-xl">
-                {firstName + " " + lastName}
-              </h2>
+<h2 className="font-bold text-xl flex items-center gap-2">
+  {firstName + " " + lastName}
+  {isOnline && (
+    <span className="flex items-center gap-1 text-sm text-green-500 font-medium">
+      <span className="w-3 h-3 rounded-full bg-green-500 inline-block"></span>
+      Online
+    </span>
+  )}
+</h2>
+
+
               {age && gender && <p>{age + ", " + gender}</p>}
               <p>{about}</p>
             </div>
-              <Link to={"/chat/" + _id}>
+            <Link
+              to={`/chat/${_id}`}
+              state={{
+                firstName,
+                lastName,
+                photoUrl,
+                userId: _id,
+              }}
+            >
               <button className="btn btn-primary">Chat</button>
             </Link>
-          
           </div>
         );
       })}
     </div>
   );
-
-  
 };
 export default Connections;
