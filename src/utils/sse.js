@@ -1,8 +1,9 @@
+import toast from "daisyui/components/toast";
 import { BASE_URL } from "./constants";
 
 let eventSource = null;
 
-export function initOnlineStatusStream(onFriendOnline, onFriendOffline, onInitialFriends) {
+export function initOnlineStatusStream(onFriendOnline, onFriendOffline, onInitialFriends ,onConnectionAccepted ) {
  
 
   if (eventSource) {
@@ -17,6 +18,7 @@ export function initOnlineStatusStream(onFriendOnline, onFriendOffline, onInitia
     console.log("✅ Connected to SSE stream");
   });
 
+ 
   eventSource.addEventListener("initial-online-friends", (e) => {
     const data = JSON.parse(e.data);
     onInitialFriends(data);
@@ -32,10 +34,24 @@ export function initOnlineStatusStream(onFriendOnline, onFriendOffline, onInitia
     onFriendOffline(userId);
   });
 
+
+
+
+eventSource.addEventListener("connection-accepted", (e) => {
+  const payload = JSON.parse(e.data);
+  if (onConnectionAccepted) {
+    onConnectionAccepted(payload);
+  }
+});
+
+
   eventSource.onerror = (err) => {
     console.error("❌ SSE error", err);
     closeOnlineStatusStream();
   };
+
+   
+  
 }
 
 export function closeOnlineStatusStream() {
@@ -44,3 +60,7 @@ export function closeOnlineStatusStream() {
     eventSource = null;
   }
 }
+
+
+
+

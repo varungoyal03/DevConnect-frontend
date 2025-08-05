@@ -9,6 +9,12 @@ import axios from "axios";
 import { addUser } from "../utils/userSlice";
 import { addConnections, addOnlineFriend, removeOnlineFriend, setOnlineFriends } from "../utils/connectionSlice";
 import { closeOnlineStatusStream, initOnlineStatusStream } from "../utils/sse";
+import { fetchConnections } from "../utils/fetchConnections";
+import { toast } from 'react-hot-toast';
+
+
+
+
 
 const Body = () => {
 
@@ -38,35 +44,58 @@ const Body = () => {
   }, []);
 
 
-    const fetchConnections = async () => {
-    try {
-      const res = await axios.get(BASE_URL + "/user/connections", {
-        withCredentials: true,
-      });
-      dispatch(addConnections(res.data.data));
-    } catch (err) {
-      // Handle Error Case
-      console.error(err);
-    }
-  };
+
+
+
+
 
   useEffect(() => {
-    fetchConnections();
+    fetchConnections(dispatch);
   }, []);
 
 
 
+
 useEffect(() => {
+
   const setupSSE = async () => {
-    if (!userData?._id) return;
+      if (!userData?._id) return;
+  
+      initOnlineStatusStream(
+        (id) => dispatch(addOnlineFriend(id)),
+        (id) => dispatch(removeOnlineFriend(id)),
+        (list) => dispatch(setOnlineFriends(list)),
+        async (payload) => {
+          // ✅ Show toast
+toast.custom(
+  <div className="bg-green-500 text-white p-3 rounded-lg flex items-center gap-3 shadow-lg">
+    <img
+      src={payload.photoUrl}
+      alt="avatar"
+      className="w-8 h-8 rounded-full object-cover"
+    />
+    <span>
+      🎉 You are now connected with <strong>{payload.name}</strong>!
+    </span>
+  </div>,
+  {
+    duration: 7000, 
+  }
+);
 
-    initOnlineStatusStream(
-      (id) => dispatch(addOnlineFriend(id)),
-      (id) => dispatch(removeOnlineFriend(id)),
-      (list) => dispatch(setOnlineFriends(list))
-    );
-  };
-
+  
+          // ✅ Re-fetch connections
+          await fetchConnections(dispatch);
+  
+          // ✅ Reconnect SSE to refresh online friend list
+          closeOnlineStatusStream();
+          setupSSE(); // ♻️ call itself again
+        }
+      );
+    };
+  
+  
+  
   setupSSE();
 
   return () => {
@@ -74,12 +103,6 @@ useEffect(() => {
   };
 }, [userData?._id]);
 
-
-
-const onlineFriends = useSelector((store) => store.connections.onlineFriends);
-useEffect(() => {
-  console.log("🟢 Online Friends:", onlineFriends);
-}, [onlineFriends]);
 
 
 
