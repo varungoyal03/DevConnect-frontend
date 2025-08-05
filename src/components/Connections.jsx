@@ -11,22 +11,6 @@ const Connections = () => {
   const onlineFriends = useSelector((store) => store.connections.onlineFriends);
 
 
-  const fetchConnections = async () => {
-    try {
-      const res = await axios.get(BASE_URL + "/user/connections", {
-        withCredentials: true,
-      });
-      dispatch(addConnections(res.data.data));
-    } catch (err) {
-      // Handle Error Case
-      console.error(err);
-    }
-  };
-
-  useEffect(() => {
-    fetchConnections();
-  }, []);
-
   if (!connections) return;
 
   if (connections.length === 0) return <h1> No Connections Found</h1>;

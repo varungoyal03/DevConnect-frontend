@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addFeed } from "../utils/feedSlice";
 import { useEffect } from "react";
 import UserCard from "./UserCard";
+import OnlineSidebar from "./OnlineSidebar";
 
 const Feed = () => {
   const feed = useSelector((store) => store.feed);
@@ -29,19 +30,30 @@ const Feed = () => {
   }, [feed]);
 
 
-    if (!feed) return <h1 className="flex justify-center my-10">Loading feed...</h1>;
+return (
+<div className="flex flex-col md:flex-row my-10 justify-center items-start gap-6 px-4">
+{/* Sidebar - Online Friends */}
+<div className="w-full md:w-64">
+<OnlineSidebar />
+</div>
 
-  if (feed.length <= 0)
-    return <h1 className="flex justify-center my-10">No new users founds!</h1>;
+  {/* Feed content */}
+  <div className="flex-1 flex justify-center">
+    {!feed ? (
+      <h1 className="text-white text-lg">Loading feed...</h1>
+    ) : feed.length === 0 ? (
+      <h1 className="text-white text-lg">No new users found!</h1>
+    ) : (
+      <UserCard user={feed[0]} />
+    )}
+  </div>
+</div>
 
-  return (
-    feed && (   
-      <div className="flex justify-center my-10">
-        <UserCard user={feed[0]} />
-      </div>
-    )
-  );
+);
 };
 
 
+
+
 export default Feed;
+

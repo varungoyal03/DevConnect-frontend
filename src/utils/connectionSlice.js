@@ -21,7 +21,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const connectionSlice = createSlice({
   name: "connection",
   initialState: {
-    connections: null,      // ← previously this was the whole state
+    connections: [],      // ← previously this was the whole state
     onlineFriends: [],      // ← new field for SSE real-time online friend tracking
   },
   reducers: {
@@ -32,7 +32,7 @@ const connectionSlice = createSlice({
       state.connections = null;
     },
 
-    // ✅ SSE-related reducers
+    // SSE-related reducers
     setOnlineFriends: (state, action) => {
       state.onlineFriends = action.payload;
     },

@@ -7,7 +7,7 @@ import { BASE_URL } from "../utils/constants";
 import { useEffect } from "react";
 import axios from "axios";
 import { addUser } from "../utils/userSlice";
-import { addOnlineFriend, removeOnlineFriend, setOnlineFriends } from "../utils/connectionSlice";
+import { addConnections, addOnlineFriend, removeOnlineFriend, setOnlineFriends } from "../utils/connectionSlice";
 import { closeOnlineStatusStream, initOnlineStatusStream } from "../utils/sse";
 
 const Body = () => {
@@ -33,17 +33,26 @@ const Body = () => {
   };
 
 
-
-
-
-
-
-
-
   useEffect(() => {
     fetchUser();
   }, []);
 
+
+    const fetchConnections = async () => {
+    try {
+      const res = await axios.get(BASE_URL + "/user/connections", {
+        withCredentials: true,
+      });
+      dispatch(addConnections(res.data.data));
+    } catch (err) {
+      // Handle Error Case
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchConnections();
+  }, []);
 
 
 
