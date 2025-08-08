@@ -14,7 +14,3 @@ export const fetchConnections = async (dispatch) => {
     console.error(err);
   }
 };
-
-
-
-  

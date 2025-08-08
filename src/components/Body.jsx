@@ -24,7 +24,7 @@ const Body = () => {
   const userData = useSelector((store) => store.user);
 
   const fetchUser = async () => {
-    if (userData) return;
+    if (userData?._id) return;
     try {
       const res = await axios.get(BASE_URL + "/profile/view", {
         withCredentials: true,
@@ -48,10 +48,12 @@ const Body = () => {
 
 
 
-
-  useEffect(() => {
+// NEW:
+useEffect(() => {
+  if (userData?._id) {
     fetchConnections(dispatch);
-  }, []);
+  }
+}, [userData?._id]);
 
 
 
@@ -99,6 +101,7 @@ toast.custom(
   setupSSE();
 
   return () => {
+    console.log("sse connection closed")
     closeOnlineStatusStream();
   };
 }, [userData?._id]);
