@@ -37,7 +37,7 @@ const OnlineSidebar = () => {
             </div>
           </div>
           <Link
-            to={`/chat/${user._id}`}
+            to={`/app/chat/${user._id}`}
             state={{
               firstName: user.firstName,
               lastName: user.lastName,

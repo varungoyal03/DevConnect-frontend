@@ -1,2 +1,24 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&display=swap');
+
 @import "tailwindcss";
 @plugin "daisyui";
+
+html {
+  font-family: 'Inter', sans-serif;
+}
+
+h1, h2, h3, .font-heading {
+  font-family: 'Sora', sans-serif;
+}
+
+.card-container {
+  overflow: hidden;
+  position: relative;
+}
+
+/* Hide scrollbars if any appear */
+.card-stack {
+  overflow: hidden;
+  position: relative;
+}

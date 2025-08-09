@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
-
+import { useNavigate } from 'react-router';
 // --- Helper Components & Icons ---
 
 const CodeBracketIcon = () => (
@@ -12,14 +12,28 @@ const CodeBracketIcon = () => (
 
 // --- Reusable UI Components (Inspired by shadcn/ui) ---
 
-const Button = ({ children, variant = 'default', className = '', ...props }) => {
-const baseClasses = "inline-block font-semibold px-6 py-2.5 rounded-md transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-sky-500/30 text-sm";
-const variants = {
-default: "bg-white text-black hover:bg-slate-200",
-outline: "bg-transparent border border-slate-800 text-slate-300 hover:bg-slate-900 hover:border-slate-700"
+
+
+
+const Button = ({ children, to, variant = 'default', className = '', ...props }) => {
+  const navigate = useNavigate();
+  const baseClasses = "inline-block font-semibold px-6 py-2.5 rounded-md transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-sky-500/30 text-sm";
+  const variants = {
+    default: "bg-white text-black hover:bg-slate-200",
+    outline: "bg-transparent border border-slate-800 text-slate-300 hover:bg-slate-900 hover:border-slate-700"
+  };
+
+  return (
+    <button
+      onClick={() => to && navigate(to)}
+      className={`${baseClasses} ${variants[variant]} ${className}`}
+      {...props}
+    >
+      {children}
+    </button>
+  );
 };
-return <a href="#" className={`${baseClasses} ${variants[variant]} ${className}`} {...props}>{children}</a>;
-};
+
 
 const Card = ({ children, className = '' }) => (
 <motion.div
@@ -57,8 +71,12 @@ className="fixed top-0 left-0 right-0 z-50 bg-black/60 backdrop-blur-lg"
 <a href="#testimonials" className="text-slate-400 hover:text-white transition">Testimonials</a>
 </nav>
 <div className="flex items-center space-x-4">
-<a href="#" className="text-slate-400 hover:text-white transition hidden sm:block text-sm">Log In</a>
-<Button variant="default">Get Started</Button>
+  <Button to="/login" variant="outline" className="hidden sm:block text-sm">
+    Log In
+  </Button>
+  <Button to="/signup" variant="default">
+    Get Started
+  </Button>
 </div>
 </div>
 </motion.header>
@@ -118,8 +136,8 @@ const Hero = () => (
         transition={{ duration: 0.6, delay: 0.3 }}
         className="mt-10 flex justify-center items-center space-x-4"
       >
-        <Button>Start Connecting</Button>
-        <Button variant="outline">Learn More</Button>
+        <Button to="/login">Start Connecting</Button>
+  <Button to="/signup" variant="outline">Learn More</Button>
       </motion.div>
 
       {/* Image */}
@@ -293,7 +311,7 @@ const CTA = () => (
             <motion.h2 variants={fadeIn()} className="text-3xl font-bold text-white">Ready to Join the Community?</motion.h2>
             <motion.p variants={fadeIn(0.1)} className="mt-4 text-lg text-slate-400 max-w-xl mx-auto">Create your profile today and start connecting with thousands of developers from around the world.</motion.p>
             <motion.div variants={fadeIn(0.2)} className="mt-8">
-                <Button className="text-lg px-8 py-3">Sign Up for Free</Button>
+                <Button to="/signup" className="text-lg px-8 py-3">Sign Up for Free</Button>
             </motion.div>
         </div>
     </Section>
@@ -308,7 +326,7 @@ const Footer = () => (
 );
 
 // Main App Component
-export default function AppLand() {
+export default function LandingPage() {
     return (
         <div className="bg-black text-slate-200 font-sans antialiased">
             <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.02]"></div>

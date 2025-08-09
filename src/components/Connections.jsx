@@ -52,7 +52,7 @@ const Connections = () => {
               <p>{about}</p>
             </div>
             <Link
-              to={`/chat/${_id}`}
+              to={`/app/chat/${_id}`}
               state={{
                 firstName,
                 lastName,

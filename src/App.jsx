@@ -10,6 +10,8 @@ import Requests from "./components/Requests";
 import SignUp from "./components/SignUp";
 import Chat from "./components/Chat";
 import { BASE_URL } from "./utils/constants";
+import LandingPage from "./components/LandingPage";
+import PublicRoute from "./components/publicRoute";
 
 function App() {
 
@@ -21,19 +23,23 @@ function App() {
     <Provider store={appStore}>
       <BrowserRouter>
         <Routes>
+            {/* Landing Page (Main Route) */}
+          <Route path="/" element={<LandingPage/>} />
 
-          <Route path="/" element={<Body />}>
+            <Route element={<PublicRoute />}>
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<SignUp/>} />
+           </Route>
 
-            <Route path="/" element={<Feed/>} />
-      
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<SignUp/>}/>
-            <Route path="/profile" element={<Profile />} />
-              <Route path="/connections" element={<Connections />} />
-              <Route path="/requests" element={<Requests />} />
-     <Route path="/chat/:targetUserId" element={<Chat />} />
+        
 
-
+          {/* Protected Layout for Logged-In Users */}
+          <Route path="/app" element={<Body />}>
+            <Route index element={<Feed />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="connections" element={<Connections />} />
+            <Route path="requests" element={<Requests />} />
+            <Route path="chat/:targetUserId" element={<Chat />} />
           </Route>
 
 
