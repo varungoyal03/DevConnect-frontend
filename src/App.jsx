@@ -11,7 +11,7 @@ import SignUp from "./components/SignUp";
 import Chat from "./components/Chat";
 import { BASE_URL } from "./utils/constants";
 import LandingPage from "./components/LandingPage";
-import PublicRoute from "./components/publicRoute";
+import PublicRoute from "./components/PublicRoute";
 
 function App() {
 
